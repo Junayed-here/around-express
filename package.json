@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Junayed-here/around-express..git"
+    "url": "git+https://github.com/Junayed-here/around-express.git"
   },
   "author": "Junayed",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Junayed-here/around-express./issues"
+    "url": "https://github.com/Junayed-here/around-express/issues"
   },
-  "homepage": "https://github.com/Junayed-here/around-express.#readme" ,
+  "homepage": "https://github.com/Junayed-here/around-express#readme" ,
   "dependencies": {
     "express": "^4.17.1"
   },
