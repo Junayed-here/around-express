@@ -2,24 +2,28 @@ const router = require('express').Router();
 const fs = require('fs');
 const path = require('path');
 
-const dataPath = path.join(__dirname, '../data/users.json');
-let users;
-fs.readFile(dataPath, { encoding: 'utf8' }, (err, data) => {
-  if (err) throw err;
-  users = JSON.parse(data);
-});
-
 router.get('/users', (req, res) => {
-  res.send(users);
+  fs.readFile(path.join(__dirname, '../data/users.json'), { encoding: 'utf8' }, (err, data) => {
+    if (err) {
+      res.status(500).send({ message: 'Error: ENOENT: no such file or directory, open \'/data/users.json\']' });
+    };
+    res.status(404).send(JSON.parse(data));
+  });
 });
 
 router.get('/users/:id', (req, res) => {
-  users.map((user) => {
-    if (user._id === req.params.id) {
-      res.send(user);
-    }
+  fs.readFile(path.join(__dirname, '../data/users.json'), { encoding: 'utf8' }, (err, data) => {
+    if (err) {
+      res.status(500).send({ message: 'Error: ENOENT: no such file or directory, open \'/data/users.json\']' });
+    };
+    const users = JSON.parse(data);
+    users.map((user) => {
+      if (user._id === req.params.id) {
+        res.send(user);
+      }
+    });
+    res.status(404).send({ message: 'User ID not found' });
   });
-  res.send({ message: 'User ID not found' });
 });
 
 module.exports = router;

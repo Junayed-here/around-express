@@ -3,10 +3,11 @@ const fs = require('fs');
 const path = require('path');
 
 router.get('/', (req, res) => {
-  const dataPath = path.join(__dirname, '../data/cards.json');
-  fs.readFile(dataPath, { encoding: 'utf8' }, (err, data) => {
-    if (err) throw err;
-    res.send(JSON.parse(data));
+  fs.readFile(path.join(__dirname, '../data/cards.json'), { encoding: 'utf8' }, (err, data) => {
+    if (err) {
+      res.status(500).send({ message: 'Error: ENOENT: no such file or directory, open \'/data/cards.json\']' });
+    };
+    res.status(404).send(JSON.parse(data));
   });
 });
 
