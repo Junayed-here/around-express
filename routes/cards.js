@@ -1,14 +1,14 @@
 const router = require('express').Router();
-const fs = require('fs');
-const path = require('path');
+const { getCard, createCard, deleteCard, likeCard, dislikeCard } = require('../controllers/cards');
 
-router.get('/', (req, res) => {
-  fs.readFile(path.join(__dirname, '../data/cards.json'), { encoding: 'utf8' }, (err, data) => {
-    if (err) {
-      res.status(500).send({ message: 'Error: ENOENT: no such file or directory, open \'/data/cards.json\']' });
-    };
-    res.status(404).send(JSON.parse(data));
-  });
-});
+router.post('/cards', createCard);
+
+router.get('/cards', getCard);
+
+router.get('/cards/:id', deleteCard);
+
+router.put('/cards/:cardId/likes', likeCard);
+
+router.delete('/cards/:cardId/likes', dislikeCard);
 
 module.exports = router;
