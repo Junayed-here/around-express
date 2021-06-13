@@ -2,19 +2,24 @@ const User = require('../models/user');
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+  User.create({ name, about, avatar }, { runValidators: true })
     .then((user) => res.status(200).send({ newUser: user }))
     .catch((err) => res.status(500).send({ message: `Error: ${err}` }));
 };
 
 module.exports.getUser = (req, res) => {
   User.findById({ _id: req.params.id })
-    .then((user) => {res.status(200).send({ user })})
+    .then((user) => {
+      if (user) {
+        return res.status(200).send({ user });
+      }
+      return res.status(400).send({ message: 'user not found!' });
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(400).send({ message: 'user not found!' });
       }
-      res.status(500).send({ message: `Error: ${err}` });
+      return res.status(500).send({ message: `Error: ${err}` });
     });
 };
 
@@ -26,14 +31,34 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.updateUsers = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.params.id,{ name, about })
-    .then((user) => res.status(200).send({ newUser: user }))
-    .catch((err) => res.status(500).send({ message: `Error: ${err}` }));
+  User.findByIdAndUpdate(req.params.id, { name, about }, { runValidators: true, new: true })
+    .then((user) => {
+      if (user) {
+        return res.status(200).send({ newUser: user });
+      }
+      return res.status(400).send({ message: 'user not found!' });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'user not found!' });
+      }
+      return res.status(500).send({ message: `Error: ${err}` });
+    });
 };
 
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.params.id,{ avatar })
-    .then((user) => res.status(200).send({ newUser: user }))
-    .catch((err) => res.status(500).send({ message: `Error: ${err}` }));
+  User.findByIdAndUpdate(req.params.id, { avatar }, { runValidators: true, new: true })
+    .then((user) => {
+      if (user) {
+        return res.status(200).send({ newUser: user });
+      }
+      return res.status(400).send({ message: 'user not found!' });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'user not found!' });
+      }
+      return res.status(500).send({ message: `Error: ${err}` });
+    });
 };
