@@ -4,7 +4,12 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.status(200).send({ newUser: user }))
-    .catch((err) => res.status(500).send({ message: `Error: ${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Not Valid Request' });
+      }
+      return res.status(500).send({ message: `Error: ${err}` });
+    });
 };
 
 module.exports.getUser = (req, res) => {
@@ -17,7 +22,7 @@ module.exports.getUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(404).send({ message: 'user not found!' });
+        return res.status(400).send({ message: 'user not found!' });
       }
       return res.status(500).send({ message: `Error: ${err}` });
     });
@@ -33,7 +38,7 @@ module.exports.getUsers = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(404).send({ message: 'user not found!' });
+        return res.status(400).send({ message: 'user not found!' });
       }
       return res.status(500).send({ message: `Error: ${err}` });
     });
@@ -46,11 +51,11 @@ module.exports.updateUsers = (req, res) => {
       if (user) {
         return res.status(200).send({ newUser: user });
       }
-      return res.status(400).send({ message: 'user not found!' });
+      return res.status(404).send({ message: 'user not found!' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(404).send({ message: 'user not found!' });
+        return res.status(400).send({ message: 'user not found!' });
       }
       return res.status(500).send({ message: `Error: ${err}` });
     });
@@ -63,11 +68,11 @@ module.exports.updateUserAvatar = (req, res) => {
       if (user) {
         return res.status(200).send({ newUser: user });
       }
-      return res.status(400).send({ message: 'user not found!' });
+      return res.status(404).send({ message: 'user not found!' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(404).send({ message: 'user not found!' });
+        return res.status(400).send({ message: 'user not found!' });
       }
       return res.status(500).send({ message: `Error: ${err}` });
     });
